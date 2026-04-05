@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quibizz — AI-powered Quiz Platform 🦆</title>
+  <meta name="description" content="Quibizz generates adaptive AI quizzes on any topic. Test your knowledge with Gemini-powered questions, instant feedback, and performance analytics." />
+
+  <!-- Fonts preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+
+<body>
+  <!-- ═══════════════════════════════════════════════════════
+       App Root
+       ═══════════════════════════════════════════════════ -->
+  <div id="app">
+
+    <!-- ╔══════════════════════════════════════════════════╗
+         ║           SCREEN 1: LANDING                     ║
+         ╚══════════════════════════════════════════════════╝ -->
+    <section class="screen" id="screen-landing" aria-label="Start Quiz">
+
+      <!-- Hero -->
+      <div class="landing-hero">
+        <div class="duck-hero-wrap">
+          <img src="assets/duck.svg" alt="Quibizz duck mascot" id="hero-duck" />
+        </div>
+        <h1 class="brand-title">Quibizz</h1>
+        <p class="brand-tagline">AI-powered quizzes on anything.<br/>Powered by Gemini ✨</p>
+      </div>
+
+      <!-- Form card -->
+      <div class="card">
+        <div class="form-grid">
+
+          <!-- Topic -->
+          <div class="field-group">
+            <label for="topic-input">📚 Quiz Topic</label>
+            <input
+              type="text"
+              id="topic-input"
+              placeholder="e.g. JavaScript, Space, Harry Potter…"
+              autocomplete="off"
+              maxlength="100"
+            />
+          </div>
+
+          <!-- Difficulty -->
+          <div class="field-group">
+            <label for="difficulty-select">🎯 Difficulty</label>
+            <div class="select-wrapper">
+              <select id="difficulty-select">
+                <option value="easy">🟢 Easy</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="hard">🔴 Hard</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Question Count -->
+          <div class="field-group">
+            <label for="count-select">❓ Questions</label>
+            <div class="select-wrapper">
+              <select id="count-select">
+                <option value="5" selected>5 Questions</option>
+                <option value="10">10 Questions</option>
+                <option value="15">15 Questions</option>
+                <option value="20">20 Questions</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <br/>
+        <button class="btn btn-primary" id="btn-start">
+          🦆 Start Quiz
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ╔══════════════════════════════════════════════════╗
+         ║           SCREEN 2: LOADING                     ║
+         ╚══════════════════════════════════════════════════╝ -->
+    <section class="screen" id="screen-loading" aria-label="Generating Quiz">
+      <img src="assets/duck.svg" alt="Loading…" class="loading-duck" />
+      <p class="loading-text">
+        Generating questions about <strong id="loading-topic">your topic</strong>
+        <span class="loading-dots"></span>
+      </p>
+    </section>
+
+    <!-- ╔══════════════════════════════════════════════════╗
+         ║           SCREEN 3: QUIZ                        ║
+         ╚══════════════════════════════════════════════════╝ -->
+    <section class="screen" id="screen-quiz" aria-label="Quiz">
+
+      <!-- Header row -->
+      <div class="quiz-header">
+        <div class="quiz-meta">
+          <span class="question-counter" id="question-counter">Question 1 of 5</span>
+          <span class="score-display" id="score-display">⭐ 0/5</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span id="quiz-topic-badge" style="font-size:0.8rem; font-weight:700; color:var(--txt-muted);"></span>
+          <span class="badge badge-medium" id="quiz-diff-badge">medium</span>
+        </div>
+        <div class="progress-bar" role="progressbar" aria-label="Quiz progress">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Question card -->
+      <div class="card question-card">
+
+        <!-- Duck reaction mini -->
+        <div class="duck-reaction" id="duck-reaction">
+          <img src="assets/duck.svg" alt="duck reaction" />
+        </div>
+
+        <p class="question-text" id="question-text">Loading question…</p>
+
+        <div class="options-grid" id="options-grid">
+          <!-- Options injected by JS -->
+        </div>
+
+        <!-- Explanation -->
+        <div class="explanation-box" id="explanation-box"></div>
+
+        <!-- Next button -->
+        <button class="btn-next" id="btn-next">
+          Next <span>→</span>
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- ╔══════════════════════════════════════════════════╗
+         ║           SCREEN 4: RESULTS                     ║
+         ╚══════════════════════════════════════════════════╝ -->
+    <section class="screen" id="screen-results" aria-label="Quiz Results">
+
+      <div class="card">
+        <!-- Score ring -->
+        <div class="results-header">
+          <div class="score-ring">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <defs>
+                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"   stop-color="#FFD93D"/>
+                  <stop offset="100%" stop-color="#FF922B"/>
+                </linearGradient>
+              </defs>
+              <circle class="score-ring-track" cx="70" cy="70" r="54"/>
+              <circle class="score-ring-fill"  cx="70" cy="70" r="54"
+                id="score-ring-fill"
+                stroke-dasharray="339.3"
+                stroke-dashoffset="339.3"
+              />
+            </svg>
+            <div class="score-center">
+              <span class="score-pct" id="score-pct">0%</span>
+              <span class="score-label">Score</span>
+            </div>
+          </div>
+
+          <h2 class="results-title" id="results-title">🎉 Well Done!</h2>
+          <p class="results-subtitle" id="results-subtitle">You finished the quiz!</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-item">
+            <span class="stat-value" id="stat-correct">0</span>
+            <span class="stat-label">✅ Correct</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="stat-wrong">0</span>
+            <span class="stat-label">❌ Wrong</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="stat-time">0s</span>
+            <span class="stat-label">⏱ Time</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="card">
+        <h3 style="font-size:1rem; font-weight:800; color:var(--txt-secondary); margin-bottom:14px; text-transform:uppercase; letter-spacing:0.07em;">
+          📋 Question Breakdown
+        </h3>
+        <div class="breakdown-list" id="breakdown-list">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="results-actions">
+        <button class="btn btn-ghost" id="btn-new-topic">🏠 New Topic</button>
+        <button class="btn btn-primary" id="btn-play-again">🔄 Play Again</button>
+      </div>
+
+    </section>
+
+  </div><!-- /#app -->
+
+  <!-- Toast -->
+  <div id="toast" role="alert" aria-live="assertive"></div>
+
+  <!-- JS (ES Modules) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

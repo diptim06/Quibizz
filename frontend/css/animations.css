@@ -1,0 +1,131 @@
+/* ═══════════════════════════════════════════════════════════
+   Quibizz — Animations & Keyframes
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Duck Waddle ─────────────────────────────────────────── */
+@keyframes duckWaddle {
+  0%   { transform: rotate(-4deg) translateY(0px); }
+  25%  { transform: rotate(0deg)  translateY(-6px); }
+  50%  { transform: rotate(4deg)  translateY(0px); }
+  75%  { transform: rotate(0deg)  translateY(-4px); }
+  100% { transform: rotate(-4deg) translateY(0px); }
+}
+
+/* ── Duck Shadow Pulse ───────────────────────────────────── */
+@keyframes duckShadow {
+  0%   { transform: translateX(-50%) scaleX(0.9); opacity: 0.5; }
+  50%  { transform: translateX(-50%) scaleX(1.1); opacity: 0.25; }
+  100% { transform: translateX(-50%) scaleX(0.9); opacity: 0.5; }
+}
+
+/* ── Duck Happy Bounce ───────────────────────────────────── */
+@keyframes duckHappy {
+  0%   { transform: translateY(0)   rotate(0deg); }
+  20%  { transform: translateY(-14px) rotate(-6deg); }
+  40%  { transform: translateY(0)   rotate(6deg); }
+  60%  { transform: translateY(-8px) rotate(-3deg); }
+  80%  { transform: translateY(0)   rotate(3deg); }
+  100% { transform: translateY(0)   rotate(0deg); }
+}
+
+/* ── Duck Sad Droop ──────────────────────────────────────── */
+@keyframes duckSad {
+  0%   { transform: rotate(0deg)   translateY(0); }
+  30%  { transform: rotate(-8deg)  translateY(4px); }
+  60%  { transform: rotate(8deg)   translateY(6px); }
+  100% { transform: rotate(-4deg)  translateY(4px); }
+}
+
+/* ── Option Correct pulse ────────────────────────────────── */
+@keyframes correctPulse {
+  0%  { transform: scale(1); }
+  40% { transform: scale(1.025); }
+  100%{ transform: scale(1); }
+}
+
+/* ── Option Wrong shake ──────────────────────────────────── */
+@keyframes wrongShake {
+  0%  { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  100%{ transform: translateX(0); }
+}
+
+/* ── Confetti burst ──────────────────────────────────────── */
+.confetti-piece {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 9998;
+  animation: confettiFall var(--duration, 2s) ease-in forwards;
+  transform-origin: center;
+}
+
+@keyframes confettiFall {
+  0%   { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(var(--drop, 600px)) rotate(var(--spin, 360deg)) scale(0.6); }
+}
+
+/* ── Card entrance ───────────────────────────────────────── */
+@keyframes cardEnter {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* ── Floating badge "✓ Correct!" ─────────────────────────── */
+.feedback-float {
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%) scale(0.5);
+  font-size: 1.6rem;
+  font-weight: 900;
+  padding: 10px 28px;
+  border-radius: 50px;
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.feedback-float.correct-fb {
+  background: var(--clr-correct-bg);
+  color: #4ADE80;
+  border: 2px solid rgba(34,197,94,0.4);
+}
+
+.feedback-float.wrong-fb {
+  background: var(--clr-wrong-bg);
+  color: #F87171;
+  border: 2px solid rgba(239,68,68,0.4);
+}
+
+.feedback-float.show {
+  animation: floatFeedback 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes floatFeedback {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  20%  { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  70%  { opacity: 1; transform: translate(-50%, -80%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -120%) scale(0.9); }
+}
+
+/* ── Streak counter animation ────────────────────────────── */
+@keyframes streakPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.score-display.streak { animation: streakPop 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* ── Score ring draw-in ──────────────────────────────────── */
+@keyframes ringDraw {
+  from { stroke-dashoffset: 440; }
+}

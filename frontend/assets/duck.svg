@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Body -->
+  <ellipse cx="100" cy="130" rx="60" ry="50" fill="#FFD93D"/>
+  <!-- Head -->
+  <circle cx="100" cy="75" r="38" fill="#FFD93D"/>
+  <!-- Eye white -->
+  <circle cx="115" cy="65" r="10" fill="white"/>
+  <!-- Eye pupil -->
+  <circle cx="117" cy="66" r="5" fill="#1a1a2e"/>
+  <!-- Eye shine -->
+  <circle cx="119" cy="63" r="2" fill="white"/>
+  <!-- Cheek blush -->
+  <ellipse cx="90" cy="80" rx="8" ry="5" fill="#FFB3C6" opacity="0.7"/>
+  <!-- Beak -->
+  <ellipse cx="136" cy="79" rx="16" ry="9" fill="#FF922B" transform="rotate(-10 136 79)"/>
+  <path d="M122 82 Q136 88 150 80" stroke="#E07B10" stroke-width="1.5" fill="none"/>
+  <!-- Wing left -->
+  <ellipse cx="52" cy="130" rx="20" ry="30" fill="#FFC300" transform="rotate(-15 52 130)"/>
+  <!-- Wing right -->
+  <ellipse cx="148" cy="130" rx="20" ry="30" fill="#FFC300" transform="rotate(15 148 130)"/>
+  <!-- Feet -->
+  <ellipse cx="82" cy="178" rx="18" ry="7" fill="#FF922B" transform="rotate(-10 82 178)"/>
+  <ellipse cx="118" cy="178" rx="18" ry="7" fill="#FF922B" transform="rotate(10 118 178)"/>
+  <!-- Forehead tuft -->
+  <ellipse cx="93" cy="40" rx="7" ry="11" fill="#FFD93D" transform="rotate(-15 93 40)"/>
+  <ellipse cx="103" cy="37" rx="7" ry="13" fill="#FFD93D" transform="rotate(5 103 37)"/>
+  <ellipse cx="112" cy="40" rx="6" ry="10" fill="#FFD93D" transform="rotate(20 112 40)"/>
+</svg>
