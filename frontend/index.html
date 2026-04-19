@@ -3,165 +3,387 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quibizz — AI-powered Quiz Platform 🦆</title>
-  <meta name="description" content="Quibizz generates adaptive AI quizzes on any topic. Test your knowledge with Gemini-powered questions, instant feedback, and performance analytics." />
+  <title>Quibizz — AI-Powered Adaptive Quizzes 🦆</title>
+  <meta name="description" content="Quibizz generates adaptive AI quizzes on any topic. Powered by Gemini. Learn smarter, quiz harder." />
 
-  <!-- Fonts preconnect -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/chatbot.css" />
 </head>
-
 <body>
-  <!-- ═══════════════════════════════════════════════════════
-       App Root
-       ═══════════════════════════════════════════════════ -->
-  <div id="app">
 
-    <!-- ╔══════════════════════════════════════════════════╗
-         ║           SCREEN 1: LANDING                     ║
-         ╚══════════════════════════════════════════════════╝ -->
-    <section class="screen" id="screen-landing" aria-label="Start Quiz">
+<!-- App shell -->
+<div id="app">
 
-      <!-- Hero -->
-      <div class="landing-hero">
-        <div class="duck-hero-wrap">
-          <img src="assets/duck.svg" alt="Quibizz duck mascot" id="hero-duck" />
-        </div>
-        <h1 class="brand-title">Quibizz</h1>
-        <p class="brand-tagline">AI-powered quizzes on anything.<br/>Powered by Gemini ✨</p>
+  <!-- ══════════════════════════════════════════════════════
+       SIDEBAR NAVIGATION (hidden on auth page)
+       ══════════════════════════════════════════════════ -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="sidebar-logo">
+      <span class="logo-duck">🦆</span>
+      <span class="logo-text">Quibizz</span>
+    </div>
+
+    <ul class="sidebar-nav" role="list">
+      <li>
+        <a href="#dashboard" class="nav-link" id="nav-dashboard" data-page="dashboard">
+          <span class="nav-icon">🏠</span>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="#quiz" class="nav-link" id="nav-quiz" data-page="quiz">
+          <span class="nav-icon">🧠</span>
+          <span>Quiz</span>
+        </a>
+      </li>
+      <li>
+        <a href="#leaderboard" class="nav-link" id="nav-leaderboard" data-page="leaderboard">
+          <span class="nav-icon">🏆</span>
+          <span>Leaderboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="#profile" class="nav-link" id="nav-profile" data-page="profile">
+          <span class="nav-icon">👤</span>
+          <span>Profile</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Chat button at bottom of sidebar -->
+    <button class="nav-chat-btn" id="nav-chat" title="Ask Quibby AI">
+      <span class="nav-icon">💬</span>
+      <span>Ask Quibby</span>
+    </button>
+
+    <button class="nav-logout" id="btn-logout">
+      <span>🚪</span> Logout
+    </button>
+  </nav>
+
+  <!-- Mobile top bar -->
+  <header class="topbar" id="topbar">
+    <button class="topbar-menu" id="topbar-menu" aria-label="Open menu">☰</button>
+    <span class="topbar-title">🦆 Quibizz</span>
+    <div class="topbar-avatar" id="topbar-avatar">?</div>
+  </header>
+
+  <!-- Mobile sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PAGE: AUTH
+       ══════════════════════════════════════════════════ -->
+  <main class="page" id="page-auth" aria-label="Authentication">
+
+    <!-- Floating decorations -->
+    <div class="auth-bg">
+      <div class="float-el float-1">⭐</div>
+      <div class="float-el float-2">🌸</div>
+      <div class="float-el float-3">💜</div>
+      <div class="float-el float-4">✨</div>
+      <div class="float-el float-5">🌙</div>
+      <div class="float-el float-6">💫</div>
+    </div>
+
+    <div class="auth-container">
+      <!-- Branding -->
+      <div class="auth-brand">
+        <div class="auth-duck">🦆</div>
+        <h1 class="auth-title">Quibizz</h1>
+        <p class="auth-tagline">AI-powered quizzes on <em>anything</em> ✨</p>
       </div>
 
-      <!-- Form card -->
-      <div class="card">
-        <div class="form-grid">
-
-          <!-- Topic -->
-          <div class="field-group">
-            <label for="topic-input">📚 Quiz Topic</label>
-            <input
-              type="text"
-              id="topic-input"
-              placeholder="e.g. JavaScript, Space, Harry Potter…"
-              autocomplete="off"
-              maxlength="100"
-            />
-          </div>
-
-          <!-- Difficulty -->
-          <div class="field-group">
-            <label for="difficulty-select">🎯 Difficulty</label>
-            <div class="select-wrapper">
-              <select id="difficulty-select">
-                <option value="easy">🟢 Easy</option>
-                <option value="medium" selected>🟡 Medium</option>
-                <option value="hard">🔴 Hard</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Question Count -->
-          <div class="field-group">
-            <label for="count-select">❓ Questions</label>
-            <div class="select-wrapper">
-              <select id="count-select">
-                <option value="5" selected>5 Questions</option>
-                <option value="10">10 Questions</option>
-                <option value="15">15 Questions</option>
-                <option value="20">20 Questions</option>
-              </select>
-            </div>
-          </div>
-
+      <!-- Glass card -->
+      <div class="auth-card glass-card">
+        <!-- Tab toggles -->
+        <div class="auth-tabs" role="tablist">
+          <button class="auth-tab active" id="tab-login" role="tab" aria-selected="true" aria-controls="form-login">Login</button>
+          <button class="auth-tab" id="tab-signup" role="tab" aria-selected="false" aria-controls="form-signup">Sign Up</button>
         </div>
 
-        <br/>
-        <button class="btn btn-primary" id="btn-start">
-          🦆 Start Quiz
+        <!-- Login form -->
+        <form class="auth-form active" id="form-login" aria-label="Login form" novalidate>
+          <div class="field-wrap">
+            <label for="login-username">Username</label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="login-username" placeholder="your username" autocomplete="username" />
+            </div>
+            <p class="field-error" id="login-username-err"></p>
+          </div>
+          <div class="field-wrap">
+            <label for="login-password">Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+            </div>
+            <p class="field-error" id="login-password-err"></p>
+          </div>
+          <p class="form-error" id="login-error"></p>
+          <button type="submit" class="btn btn-primary btn-full" id="btn-login">
+            <span class="btn-label">Login →</span>
+            <span class="btn-loader hidden">⏳</span>
+          </button>
+        </form>
+
+        <!-- Signup form -->
+        <form class="auth-form" id="form-signup" aria-label="Signup form" novalidate>
+          <div class="field-wrap">
+            <label for="signup-username">Choose a username</label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="signup-username" placeholder="coolquizzer99" autocomplete="username" />
+            </div>
+            <p class="field-error" id="signup-username-err"></p>
+          </div>
+          <div class="field-wrap">
+            <label for="signup-password">Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="signup-password" placeholder="min 6 characters" autocomplete="new-password" />
+            </div>
+            <p class="field-error" id="signup-password-err"></p>
+          </div>
+          <p class="form-error" id="signup-error"></p>
+          <button type="submit" class="btn btn-primary btn-full" id="btn-signup">
+            <span class="btn-label">Create Account ✨</span>
+            <span class="btn-loader hidden">⏳</span>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="auth-divider"><span>or</span></div>
+
+        <!-- Guest mode -->
+        <button class="btn btn-ghost btn-full" id="btn-guest">
+          Continue as Guest 🦆
         </button>
       </div>
+    </div>
+  </main>
 
-    </section>
+  <!-- ══════════════════════════════════════════════════════
+       PAGE: DASHBOARD
+       ══════════════════════════════════════════════════ -->
+  <main class="page" id="page-dashboard" aria-label="Dashboard">
+    <div class="page-content">
 
-    <!-- ╔══════════════════════════════════════════════════╗
-         ║           SCREEN 2: LOADING                     ║
-         ╚══════════════════════════════════════════════════╝ -->
-    <section class="screen" id="screen-loading" aria-label="Generating Quiz">
-      <img src="assets/duck.svg" alt="Loading…" class="loading-duck" />
-      <p class="loading-text">
-        Generating questions about <strong id="loading-topic">your topic</strong>
-        <span class="loading-dots"></span>
-      </p>
-    </section>
-
-    <!-- ╔══════════════════════════════════════════════════╗
-         ║           SCREEN 3: QUIZ                        ║
-         ╚══════════════════════════════════════════════════╝ -->
-    <section class="screen" id="screen-quiz" aria-label="Quiz">
-
-      <!-- Header row -->
-      <div class="quiz-header">
-        <div class="quiz-meta">
-          <span class="question-counter" id="question-counter">Question 1 of 5</span>
-          <span class="score-display" id="score-display">⭐ 0/5</span>
+      <!-- Greeting -->
+      <div class="dash-greeting">
+        <div>
+          <h2 class="greeting-text">Hi, <span id="dash-username">friend</span> 👋</h2>
+          <p class="greeting-sub">Ready to level up your knowledge today?</p>
         </div>
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-          <span id="quiz-topic-badge" style="font-size:0.8rem; font-weight:700; color:var(--txt-muted);"></span>
-          <span class="badge badge-medium" id="quiz-diff-badge">medium</span>
+        <div class="greeting-duck">🦆</div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stats-grid">
+        <div class="stat-card stat-streak">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-body">
+            <div class="stat-value" id="dash-streak">0</div>
+            <div class="stat-label">Day Streak</div>
+          </div>
         </div>
-        <div class="progress-bar" role="progressbar" aria-label="Quiz progress">
+        <div class="stat-card stat-accuracy">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-body">
+            <div class="stat-value" id="dash-accuracy">0%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+        </div>
+        <div class="stat-card stat-quizzes">
+          <div class="stat-icon">📚</div>
+          <div class="stat-body">
+            <div class="stat-value" id="dash-quizzes">0</div>
+            <div class="stat-label">Quizzes Done</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA + Daily challenge row -->
+      <div class="dash-cta-row">
+        <!-- Start quiz CTA -->
+        <div class="cta-card glass-card">
+          <div class="cta-emoji">🧠</div>
+          <h3 class="cta-title">Start a Quiz</h3>
+          <p class="cta-sub">Pick a topic, choose your difficulty, and let the AI quiz you!</p>
+          <button class="btn btn-primary" id="btn-start-from-dash">
+            Start Quiz →
+          </button>
+        </div>
+
+        <!-- Daily challenge -->
+        <div class="daily-card glass-card">
+          <div class="daily-header">
+            <span class="daily-badge">⚡ Daily Challenge</span>
+          </div>
+          <div class="daily-topic" id="daily-topic">Space Exploration</div>
+          <div class="daily-diff">
+            <span class="diff-chip chip-medium">Medium</span>
+            <span class="daily-q">5 Questions</span>
+          </div>
+          <button class="btn btn-secondary" id="btn-daily">Take Challenge!</button>
+        </div>
+      </div>
+
+      <!-- Recent activity -->
+      <div class="recent-section glass-card">
+        <h3 class="section-title">📋 Recent Activity</h3>
+        <div class="activity-list" id="activity-list">
+          <div class="activity-empty">No quizzes yet — take your first one! 🚀</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════
+       PAGE: QUIZ
+       ══════════════════════════════════════════════════ -->
+  <main class="page" id="page-quiz" aria-label="Quiz">
+
+    <!-- Quiz setup screen -->
+    <div class="quiz-setup" id="quiz-setup">
+      <div class="page-content">
+        <h2 class="setup-title">What do you want to be quizzed on? 🤔</h2>
+
+        <!-- Topic input -->
+        <div class="setup-card glass-card">
+          <div class="field-wrap">
+            <label for="topic-input">📚 Topic</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔍</span>
+              <input type="text" id="topic-input" placeholder="e.g. Harry Potter, Space, JavaScript…" autocomplete="off" maxlength="100" />
+            </div>
+          </div>
+
+          <!-- Popular topics -->
+          <div class="topic-chips" id="topic-chips">
+            <span class="chip-label">Popular:</span>
+            <button class="topic-chip" data-topic="World History">🌍 History</button>
+            <button class="topic-chip" data-topic="Space & Astronomy">🚀 Space</button>
+            <button class="topic-chip" data-topic="Harry Potter">⚡ Harry Potter</button>
+            <button class="topic-chip" data-topic="JavaScript">💻 JavaScript</button>
+            <button class="topic-chip" data-topic="Marvel Universe">🦸 Marvel</button>
+            <button class="topic-chip" data-topic="Science & Biology">🧬 Biology</button>
+          </div>
+
+          <div class="setup-row">
+            <div class="field-wrap">
+              <label for="difficulty-select">🎯 Difficulty</label>
+              <div class="select-wrap">
+                <select id="difficulty-select">
+                  <option value="easy">🟢 Easy</option>
+                  <option value="medium" selected>🟡 Medium</option>
+                  <option value="hard">🔴 Hard</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-wrap">
+              <label for="count-select">❓ Questions</label>
+              <div class="select-wrap">
+                <select id="count-select">
+                  <option value="5" selected>5 Questions</option>
+                  <option value="10">10 Questions</option>
+                  <option value="15">15 Questions</option>
+                  <option value="20">20 Questions</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-full" id="btn-start">
+            🦆 Start Quiz!
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz loading screen -->
+    <div class="quiz-loading hidden" id="quiz-loading">
+      <div class="loading-duck-wrap">
+        <div class="loading-duck-anim">🦆</div>
+        <p class="loading-text">Generating smart questions about <strong id="loading-topic">your topic</strong>…</p>
+        <div class="loading-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active quiz screen -->
+    <div class="quiz-active hidden" id="quiz-active">
+      <!-- Progress header -->
+      <div class="quiz-progress-wrap">
+        <div class="quiz-meta-bar">
+          <div class="quiz-meta-left">
+            <span class="q-counter" id="question-counter">Q 1 / 5</span>
+            <span class="diff-badge" id="quiz-diff-badge">medium</span>
+          </div>
+          <div class="quiz-score-display" id="score-display">⭐ 0</div>
+        </div>
+        <div class="progress-bar" role="progressbar">
           <div class="progress-fill" id="progress-fill" style="width:0%"></div>
         </div>
       </div>
 
-      <!-- Question card -->
-      <div class="card question-card">
+      <div class="page-content">
+        <!-- Question card -->
+        <div class="question-card glass-card" id="question-card">
+          <div class="q-duck-row">
+            <div class="q-topic-chip" id="quiz-topic-badge">Topic</div>
+            <div class="q-duck" id="duck-reaction">🦆</div>
+          </div>
+          <p class="question-text" id="question-text">Loading question…</p>
 
-        <!-- Duck reaction mini -->
-        <div class="duck-reaction" id="duck-reaction">
-          <img src="assets/duck.svg" alt="duck reaction" />
+          <div class="options-grid" id="options-grid">
+            <!-- Injected by JS -->
+          </div>
+
+          <!-- Explanation -->
+          <div class="explanation-box" id="explanation-box"></div>
+
+          <!-- Action bar -->
+          <div class="quiz-actions">
+            <button class="btn btn-ghost btn-sm" id="btn-hint">💡 Hint</button>
+            <button class="btn btn-ghost btn-sm" id="btn-skip">⏭ Skip</button>
+            <button class="btn btn-primary btn-next" id="btn-next">Next →</button>
+          </div>
         </div>
 
-        <p class="question-text" id="question-text">Loading question…</p>
-
-        <div class="options-grid" id="options-grid">
-          <!-- Options injected by JS -->
+        <!-- Hint box -->
+        <div class="hint-box glass-card hidden" id="hint-box">
+          <span class="hint-icon">💡</span>
+          <p class="hint-text" id="hint-text"></p>
         </div>
-
-        <!-- Explanation -->
-        <div class="explanation-box" id="explanation-box"></div>
-
-        <!-- Next button -->
-        <button class="btn-next" id="btn-next">
-          Next <span>→</span>
-        </button>
-
       </div>
+    </div>
 
-    </section>
-
-    <!-- ╔══════════════════════════════════════════════════╗
-         ║           SCREEN 4: RESULTS                     ║
-         ╚══════════════════════════════════════════════════╝ -->
-    <section class="screen" id="screen-results" aria-label="Quiz Results">
-
-      <div class="card">
-        <!-- Score ring -->
-        <div class="results-header">
-          <div class="score-ring">
-            <svg width="140" height="140" viewBox="0 0 140 140">
+    <!-- Results screen -->
+    <div class="quiz-results hidden" id="quiz-results">
+      <div class="page-content">
+        <div class="results-card glass-card">
+          <!-- Score ring -->
+          <div class="score-ring-wrap">
+            <svg width="140" height="140" viewBox="0 0 140 140" class="score-svg">
               <defs>
-                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"   stop-color="#FFD93D"/>
-                  <stop offset="100%" stop-color="#FF922B"/>
+                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FFB7D5"/>
+                  <stop offset="100%" stop-color="#A78BFA"/>
                 </linearGradient>
               </defs>
               <circle class="score-ring-track" cx="70" cy="70" r="54"/>
-              <circle class="score-ring-fill"  cx="70" cy="70" r="54"
+              <circle class="score-ring-fill" cx="70" cy="70" r="54"
                 id="score-ring-fill"
                 stroke-dasharray="339.3"
                 stroke-dashoffset="339.3"
@@ -169,55 +391,137 @@
             </svg>
             <div class="score-center">
               <span class="score-pct" id="score-pct">0%</span>
-              <span class="score-label">Score</span>
+              <span class="score-lbl">Score</span>
             </div>
           </div>
 
           <h2 class="results-title" id="results-title">🎉 Well Done!</h2>
-          <p class="results-subtitle" id="results-subtitle">You finished the quiz!</p>
+          <p class="results-sub" id="results-subtitle">You finished the quiz!</p>
+
+          <div class="results-stats-row">
+            <div class="r-stat">
+              <span class="r-val" id="stat-correct">0</span>
+              <span class="r-lbl">✅ Correct</span>
+            </div>
+            <div class="r-stat">
+              <span class="r-val" id="stat-wrong">0</span>
+              <span class="r-lbl">❌ Wrong</span>
+            </div>
+            <div class="r-stat">
+              <span class="r-val" id="stat-time">0s</span>
+              <span class="r-lbl">⏱ Time</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Stats -->
-        <div class="stats-row">
-          <div class="stat-item">
-            <span class="stat-value" id="stat-correct">0</span>
-            <span class="stat-label">✅ Correct</span>
+        <!-- Breakdown -->
+        <div class="breakdown-card glass-card">
+          <h3 class="breakdown-title">📋 Question Breakdown</h3>
+          <div class="breakdown-list" id="breakdown-list"></div>
+        </div>
+
+        <!-- Result actions -->
+        <div class="results-actions">
+          <button class="btn btn-ghost" id="btn-new-topic">🏠 Dashboard</button>
+          <button class="btn btn-primary" id="btn-play-again">🔄 Play Again</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════
+       PAGE: PROFILE
+       ══════════════════════════════════════════════════ -->
+  <main class="page" id="page-profile" aria-label="Profile">
+    <div class="page-content">
+
+      <div class="profile-header glass-card">
+        <div class="profile-avatar" id="profile-avatar">🦆</div>
+        <div class="profile-info">
+          <h2 class="profile-name" id="profile-name">Username</h2>
+          <p class="profile-since">Quizzing since <span id="profile-since">today</span></p>
+        </div>
+      </div>
+
+      <!-- Profile stats -->
+      <div class="stats-grid">
+        <div class="stat-card stat-streak">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-body">
+            <div class="stat-value" id="profile-streak">0</div>
+            <div class="stat-label">Best Streak</div>
           </div>
-          <div class="stat-item">
-            <span class="stat-value" id="stat-wrong">0</span>
-            <span class="stat-label">❌ Wrong</span>
+        </div>
+        <div class="stat-card stat-accuracy">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-body">
+            <div class="stat-value" id="profile-accuracy">0%</div>
+            <div class="stat-label">Accuracy</div>
           </div>
-          <div class="stat-item">
-            <span class="stat-value" id="stat-time">0s</span>
-            <span class="stat-label">⏱ Time</span>
+        </div>
+        <div class="stat-card stat-quizzes">
+          <div class="stat-icon">📚</div>
+          <div class="stat-body">
+            <div class="stat-value" id="profile-quizzes">0</div>
+            <div class="stat-label">Total Quizzes</div>
           </div>
         </div>
       </div>
 
-      <!-- Breakdown -->
-      <div class="card">
-        <h3 style="font-size:1rem; font-weight:800; color:var(--txt-secondary); margin-bottom:14px; text-transform:uppercase; letter-spacing:0.07em;">
-          📋 Question Breakdown
-        </h3>
-        <div class="breakdown-list" id="breakdown-list">
+      <!-- Best topic -->
+      <div class="best-topic-card glass-card">
+        <span class="best-topic-label">⭐ Best Topic</span>
+        <span class="best-topic-value" id="profile-best-topic">—</span>
+      </div>
+
+      <!-- Achievements -->
+      <div class="achievements-card glass-card">
+        <h3 class="section-title">🏅 Achievements</h3>
+        <div class="achievements-grid" id="achievements-grid">
           <!-- Injected by JS -->
         </div>
       </div>
 
-      <!-- Actions -->
-      <div class="results-actions">
-        <button class="btn btn-ghost" id="btn-new-topic">🏠 New Topic</button>
-        <button class="btn btn-primary" id="btn-play-again">🔄 Play Again</button>
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════
+       PAGE: LEADERBOARD
+       ══════════════════════════════════════════════════ -->
+  <main class="page" id="page-leaderboard" aria-label="Leaderboard">
+    <div class="page-content">
+
+      <div class="lb-header">
+        <h2 class="lb-title">🏆 Leaderboard</h2>
+        <p class="lb-sub">See who's crushing it on Quibizz!</p>
       </div>
 
-    </section>
+      <!-- Top 3 podium -->
+      <div class="podium" id="podium">
+        <!-- Injected by JS -->
+      </div>
 
-  </div><!-- /#app -->
+      <!-- Full ranking -->
+      <div class="lb-table glass-card">
+        <div class="lb-table-list" id="lb-list">
+          <!-- Injected by JS -->
+        </div>
+        <div class="lb-empty hidden" id="lb-empty">
+          No rankings yet. Be the first! 🦆
+        </div>
+      </div>
 
-  <!-- Toast -->
-  <div id="toast" role="alert" aria-live="assertive"></div>
+    </div>
+  </main>
 
-  <!-- JS (ES Modules) -->
-  <script type="module" src="js/app.js"></script>
+</div><!-- /#app -->
+
+<!-- Toast -->
+<div id="toast" role="alert" aria-live="assertive"></div>
+
+<!-- JS modules -->
+<script type="module" src="js/app.js"></script>
+
 </body>
 </html>

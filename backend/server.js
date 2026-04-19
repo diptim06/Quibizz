@@ -1,10 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const rateLimit = require('express-rate-limit');
 
-const quizRoutes = require('./routes/quiz');
+const quizRoutes   = require('./routes/quiz');
 const healthRoutes = require('./routes/health');
+const authRoutes   = require('./routes/auth');
+const chatRoutes   = require('./routes/chat');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -30,11 +33,22 @@ app.use('/api/quiz/generate', limiter);
 
 // ── Routes ─────────────────────────────────────────────────
 app.use('/api/health', healthRoutes);
-app.use('/api/quiz', quizRoutes);
+app.use('/api/auth',   authRoutes);
+app.use('/api/quiz',   quizRoutes);
+app.use('/api/chat',   chatRoutes);
 
-// 404 handler
-app.use((req, res) => {
+// ── API 404 handler ─────────────────────────────────────────
+app.use('/api', (req, res) => {
   res.status(404).json({ error: `Route ${req.method} ${req.path} not found` });
+});
+
+// ── Serve Frontend Static Files ──────────────────────────────
+const FRONTEND = path.join(__dirname, '../frontend');
+app.use(express.static(FRONTEND));
+
+// SPA fallback — always serve index.html for non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(FRONTEND, 'index.html'));
 });
 
 // Global error handler
@@ -46,7 +60,8 @@ app.use((err, req, res, next) => {
 // ── Start ───────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`\n🦆 Quibizz backend running at http://localhost:${PORT}`);
-  console.log(`   Health check: http://localhost:${PORT}/api/health`);
+  console.log(`   🌐 Open the app at:  http://localhost:${PORT}`);
+  console.log(`   Health check:       http://localhost:${PORT}/api/health`);
   if (!process.env.GEMINI_API_KEY) {
     console.warn('\n⚠️  WARNING: GEMINI_API_KEY is not set in .env file!');
     console.warn('   Copy backend/.env.example to backend/.env and add your key.\n');

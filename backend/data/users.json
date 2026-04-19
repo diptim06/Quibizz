@@ -1,1 +1,28 @@
-[]
+[
+  {
+    "id": "u_1776493411694_emwgt",
+    "username": "dipti",
+    "passwordHash": "$2b$10$KZ8gCjQcqUhv55r5zTdRVu/pfwFWrwa8aIVJMMsWUWWOBoX1SlE2S",
+    "createdAt": "2026-04-18T06:23:31.694Z",
+    "stats": {
+      "totalQuizzes": 7,
+      "totalCorrect": 17,
+      "totalQuestions": 35,
+      "streak": 1,
+      "lastQuizDate": "2026-04-18T06:48:33.558Z"
+    }
+  },
+  {
+    "id": "u_1776495105660_0j5zl",
+    "username": "coolquizzer99",
+    "passwordHash": "$2b$10$yOqcTlk2jY1vh9V6eVYGIugC/oG/ue2uGVbIdxPTd4.N0JURZliBi",
+    "createdAt": "2026-04-18T06:51:45.660Z",
+    "stats": {
+      "totalQuizzes": 6,
+      "totalCorrect": 21,
+      "totalQuestions": 75,
+      "streak": 2,
+      "lastQuizDate": "2026-04-19T14:30:40.952Z"
+    }
+  }
+]

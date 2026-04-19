@@ -1,37 +1,67 @@
-const { generateQuestions, validateAnswer } = require('../services/geminiService');
+/* ══════════════════════════════════════════════════════════════
+   Quibizz — Quiz Controller
+   POST /api/quiz/generate  — generates an adaptive batch
+   POST /api/quiz/validate  — validates a single answer locally
+   ══════════════════════════════════════════════════════════ */
+
+const { generateAdaptiveBatch, validateAnswer } = require('../services/geminiService');
+
+const VALID_DIFFICULTIES = ['easy', 'medium', 'hard'];
 
 /**
  * POST /api/quiz/generate
- * Body: { topic, difficulty, count }
+ * Body: { topic, difficulty, count, isCorrect }
+ *
+ * isCorrect (optional) — overall result of user's PREVIOUS quiz:
+ *   true  → they did well, make it harder
+ *   false → they struggled, make it easier
+ *   null  → first quiz, use stated difficulty as-is
  */
 async function generate(req, res) {
   try {
-    const { topic, difficulty = 'medium', count = 5 } = req.body;
+    // ── Input validation & sanitisation ──────────────────────
+    const rawTopic      = req.body.topic;
+    const rawDifficulty = req.body.difficulty;
+    const rawCount      = req.body.count;
+    const rawIsCorrect  = req.body.isCorrect;
 
-    if (!topic || typeof topic !== 'string' || topic.trim().length === 0) {
+    // topic is required
+    if (!rawTopic || typeof rawTopic !== 'string' || rawTopic.trim().length === 0) {
       return res.status(400).json({ error: 'topic is required and must be a non-empty string' });
     }
 
-    const safeCount = Math.min(Math.max(parseInt(count, 10) || 5, 1), 20);
-    const safeDifficulty = ['easy', 'medium', 'hard'].includes(difficulty) ? difficulty : 'medium';
+    const topic      = rawTopic.trim().slice(0, 100); // max 100 chars
+    const difficulty = VALID_DIFFICULTIES.includes(rawDifficulty) ? rawDifficulty : 'medium';
+    const count      = Math.min(Math.max(parseInt(rawCount, 10) || 5, 1), 60);
+    const isCorrect  = rawIsCorrect === true ? true : rawIsCorrect === false ? false : null;
 
-    console.log(`Generating ${safeCount} ${safeDifficulty} questions about: ${topic}`);
+    console.log(`[generate] "${topic}" | diff=${difficulty} | count=${count} | prevCorrect=${isCorrect}`);
 
-    const questions = await generateQuestions(topic.trim(), safeDifficulty, safeCount);
+    // ── Generate (cache → Gemini → fallback) ─────────────────
+    const questions = await generateAdaptiveBatch(topic, count, difficulty, isCorrect);
+
+    // Detect if dynamic (generic) fallback was used — questions reference the topic
+    // by name but aren't truly topic-specific trivia
+    const isDynamic = questions.length > 0 &&
+      questions[0].question?.startsWith('Which of the following is most closely associated with');
 
     return res.json({
-      success: true,
-      topic: topic.trim(),
-      difficulty: safeDifficulty,
-      count: questions.length,
+      success:   true,
+      topic,
+      difficulty,
+      count:     questions.length,
       questions,
+      offline:   isDynamic, // hint to frontend to show a notice
     });
+
   } catch (err) {
-    console.error('Error generating questions:', err.message);
-    if (err.message?.includes('API_KEY') || err.message?.includes('api key')) {
-      return res.status(500).json({ error: 'Invalid or missing Gemini API key. Check your .env file.' });
-    }
-    return res.status(500).json({ error: 'Failed to generate questions. Please try again.', detail: err.message });
+    // This should never be reached — generateAdaptiveBatch never throws.
+    // Kept as a last-resort safety net.
+    console.error('[generate] Unexpected error:', err.message);
+    return res.status(500).json({
+      error:  'An unexpected error occurred. Please try again.',
+      detail: err.message,
+    });
   }
 }
 
@@ -47,10 +77,11 @@ async function validate(req, res) {
       return res.status(400).json({ error: 'question object and selectedIndex (number) are required' });
     }
 
-    const result = await validateAnswer(question, selectedIndex);
+    const result = validateAnswer(question, selectedIndex);
     return res.json({ success: true, ...result });
+
   } catch (err) {
-    console.error('Error validating answer:', err.message);
+    console.error('[validate] Error:', err.message);
     return res.status(500).json({ error: 'Failed to validate answer.' });
   }
 }
