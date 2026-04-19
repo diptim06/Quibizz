@@ -1,87 +1,116 @@
-# 🦆 Quibizz
+# Quibizz – AI Quiz Generator System
 
-> AI-powered adaptive quiz platform with dynamic question generation, real-time feedback, and performance analytics.
+Quibizz is an intelligent web-based quiz application that generates dynamic questions using AI and adapts difficulty based on user performance. It enhances learning through real-time feedback, leaderboard tracking, and an integrated chatbot for explanations.
+
+---
+
+## Features
+
+* AI-based question generation using Gemini API
+* Adaptive difficulty based on user performance
+* Leaderboard system for ranking users
+* User dashboard with score tracking and history
+* Chatbot for explanations and assistance
+* Logging system for tracking user activity
+* Clean and interactive user interface
+
+---
+
+## Tech Stack
+
+Frontend:
+
+* HTML, CSS, JavaScript
+
+Backend:
+
+* Node.js
+
+Database:
+
+* MongoDB
+
+AI Integration:
+
+* Gemini API
+
+---
+
+## How It Works
+
+1. User selects topic, difficulty, and number of questions
+2. System sends request to AI model
+3. AI generates quiz questions dynamically
+4. User answers questions
+5. System evaluates responses
+6. Difficulty adjusts based on performance
+7. Results are displayed on dashboard and leaderboard
+
+---
 
 ## Project Structure
 
 ```
-Quibizz/
-├── frontend/               # SPA (HTML + CSS + JS)
-│   ├── index.html          # App entry point — open this in browser
-│   ├── css/
-│   │   ├── main.css        # Design tokens, global styles
-│   │   ├── components.css  # Screen & component styles
-│   │   └── animations.css  # Duck animations, effects
-│   ├── js/
-│   │   ├── app.js          # App bootstrap & event wiring
-│   │   ├── api.js          # Backend API calls
-│   │   ├── quiz.js         # Quiz state machine
-│   │   └── ui.js           # DOM manipulation helpers
-│   └── assets/
-│       └── duck.svg        # Duck mascot
-│
-└── backend/                # Node.js + Express + Gemini API
-    ├── server.js           # Entry point  →  PORT 3001
-    ├── package.json
-    ├── .env.example        # Copy to .env and add your key
-    ├── routes/
-    │   ├── quiz.js         # POST /api/quiz/generate, /validate
-    │   └── health.js       # GET  /api/health
-    ├── controllers/
-    │   └── quizController.js
-    └── services/
-        └── geminiService.js  # Gemini 1.5 Flash integration
+/frontend
+/backend
 ```
 
-## Quick Start
+---
 
-### 1. Set up the backend
+## Installation
 
-```bash
-cd backend
+```
+git clone https://github.com/diptim06/Quibizz.git
+cd Quibizz
 npm install
-
-# Copy the env template and add your Gemini API key
-cp .env.example .env
-# Edit .env and set GEMINI_API_KEY=your_key_here
-# Get a free key at https://aistudio.google.com/app/apikey
-
-npm start         # production
-# OR
-npm run dev       # development (auto-reload with nodemon)
+npm start
 ```
 
-### 2. Open the frontend
+---
 
-Since the frontend is plain HTML/CSS/JS with ES modules, you need to serve it via a local server (required for ES module imports):
+## Environment Variables
 
-```bash
-# Option A: Python (usually already installed)
-cd frontend && python3 -m http.server 3000
+Create a `.env` file:
 
-# Option B: Node http-server
-npx http-server frontend -p 3000
-
-# Option C: VS Code Live Server extension
-# Right-click frontend/index.html → "Open with Live Server"
+```
+GEMINI_API_KEY=your_api_key
+MONGODB_URI=your_database_url
 ```
 
-Then open **http://localhost:3000** in your browser.
+---
 
-## API Reference
+## Example Output
 
-| Method | Endpoint              | Body                               | Description                  |
-|--------|-----------------------|------------------------------------|------------------------------|
-| GET    | /api/health           | —                                  | Check server & API key status |
-| POST   | /api/quiz/generate    | `{ topic, difficulty, count }`     | Generate quiz questions       |
-| POST   | /api/quiz/validate    | `{ question, selectedIndex }`      | Validate a single answer      |
+Score: 4 / 5
+Performance: Good
+Suggestion: Improve weak topics
 
-## Features
+---
 
-- 🦆 Cute animated duck mascot (happy/sad reactions)
-- ✨ AI question generation via Gemini 1.5 Flash
-- 🎯 Three difficulty levels (Easy / Medium / Hard)
-- 📊 Score ring + per-question breakdown on results
-- 🎉 Confetti on high scores
-- 💡 Instant explanations after each answer
-- 🌙 Dark mode glass-morphism design
+## Limitations
+
+* Depends on AI-generated responses
+* Requires internet connection
+* Output may vary based on prompts
+
+---
+
+## Future Scope
+
+* Mobile application
+* Gamification features (badges, streaks)
+* Advanced personalization
+* Integration with learning platforms
+
+---
+
+## Author
+
+Dipti
+
+---
+
+## License
+
+For academic and learning purposes.
+
